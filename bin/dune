@@ -1,0 +1,4 @@
+(executable
+ (public_name Game_2048)
+ (name main)
+ (libraries Game_2048))
