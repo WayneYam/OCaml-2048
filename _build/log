@@ -13,39 +13,369 @@
 #  ; build_dir = In_build_dir "default"
 #  ; instrument_with = []
 #  }
-$ /home/wayne/.opam/default/bin/ocamlc.opt -config > /tmp/dune_59fbeb_output
-$ /usr/bin/git --no-pager diff --no-index --color=always -u _build/default/lib/dune _build/default/lib/.formatted/dune
-> diff --git a/_build/default/lib/dune b/_build/default/lib/.formatted/dune
-> index 511d271..6468230 100644
-> --- a/_build/default/lib/dune
-> +++ b/_build/default/lib/.formatted/dune
-> @@ -1,3 +1,3 @@
->  (library
-> -  (libraries base stdio)
-> + (libraries base stdio)
->   (name Game_2048))
-[1]
+$ /home/wayne/.opam/default/bin/ocamlc.opt -config > /tmp/dune_b9bac7_output
 $ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --impl test/test_Game_2048.ml) > _build/default/test/.formatted/test_Game_2048.ml
-> File "test/test_Game_2048.ml", line 1:
-> Warning: Ocamlformat disabled because [--enable-outside-detected-project] is not set and no [.ocamlformat] was found within the project (root: ../../../Game_2048)
-$ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --intf lib/cell.mli) > _build/default/lib/.formatted/cell.mli
-> File "lib/cell.mli", line 1:
-> Warning: Ocamlformat disabled because [--enable-outside-detected-project] is not set and no [.ocamlformat] was found within the project (root: ../../../Game_2048)
-$ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --impl lib/cell.ml) > _build/default/lib/.formatted/cell.ml
-> File "lib/cell.ml", line 1:
-> Warning: Ocamlformat disabled because [--enable-outside-detected-project] is not set and no [.ocamlformat] was found within the project (root: ../../../Game_2048)
 $ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --intf lib/input.mli) > _build/default/lib/.formatted/input.mli
-> File "lib/input.mli", line 1:
-> Warning: Ocamlformat disabled because [--enable-outside-detected-project] is not set and no [.ocamlformat] was found within the project (root: ../../../Game_2048)
-$ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --impl bin/main.ml) > _build/default/bin/.formatted/main.ml
-> File "bin/main.ml", line 1:
-> Warning: Ocamlformat disabled because [--enable-outside-detected-project] is not set and no [.ocamlformat] was found within the project (root: ../../../Game_2048)
-$ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --impl lib/board.ml) > _build/default/lib/.formatted/board.ml
-> File "lib/board.ml", line 1:
-> Warning: Ocamlformat disabled because [--enable-outside-detected-project] is not set and no [.ocamlformat] was found within the project (root: ../../../Game_2048)
 $ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --intf lib/board.mli) > _build/default/lib/.formatted/board.mli
-> File "lib/board.mli", line 1:
-> Warning: Ocamlformat disabled because [--enable-outside-detected-project] is not set and no [.ocamlformat] was found within the project (root: ../../../Game_2048)
 $ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --impl lib/input.ml) > _build/default/lib/.formatted/input.ml
-> File "lib/input.ml", line 1:
-> Warning: Ocamlformat disabled because [--enable-outside-detected-project] is not set and no [.ocamlformat] was found within the project (root: ../../../Game_2048)
+$ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --impl bin/main.ml) > _build/default/bin/.formatted/main.ml
+$ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --impl lib/cell.ml) > _build/default/lib/.formatted/cell.ml
+$ /usr/bin/git --no-pager diff --no-index --color=always -u _build/default/lib/input.mli _build/default/lib/.formatted/input.mli
+> diff --git a/_build/default/lib/input.mli b/_build/default/lib/.formatted/input.mli
+> index b5cdee2..f744e2a 100644
+> --- a/_build/default/lib/input.mli
+> +++ b/_build/default/lib/.formatted/input.mli
+> @@ -1,4 +1,8 @@
+> -type direction = Up | Left | Down | Right
+> +type direction =
+> +  | Up
+> +  | Left
+> +  | Down
+> +  | Right
+>  
+> -val get_dir : unit -> direction
+>  (** [get_dir ()] asks user which direction to move *)
+> +val get_dir : unit -> direction
+[1]
+$ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --intf lib/cell.mli) > _build/default/lib/.formatted/cell.mli
+$ /usr/bin/git --no-pager diff --no-index --color=always -u _build/default/lib/board.mli _build/default/lib/.formatted/board.mli
+> diff --git a/_build/default/lib/board.mli b/_build/default/lib/.formatted/board.mli
+> index a2581ac..4d8d054 100644
+> --- a/_build/default/lib/board.mli
+> +++ b/_build/default/lib/.formatted/board.mli
+> @@ -1,13 +1,13 @@
+>  type t
+>  
+> -val equal : t -> t -> bool
+>  (** [equal x y] test if [x] and [y] are equal*)
+> +val equal : t -> t -> bool
+>  
+> -val string_of : t -> string
+>  (** [string of x] returns a text representation of [x] *)
+> +val string_of : t -> string
+>  
+> -val init : int -> t
+>  (** [init x] initializes a board of size [x] *)
+> +val init : int -> t
+>  
+> -val main : unit -> unit
+>  (** [main ()] runs the game *)
+> +val main : unit -> unit
+[1]
+$ /usr/bin/git --no-pager diff --no-index --color=always -u _build/default/lib/input.ml _build/default/lib/.formatted/input.ml
+> diff --git a/_build/default/lib/input.ml b/_build/default/lib/.formatted/input.ml
+> index 93725c2..83201fb 100644
+> --- a/_build/default/lib/input.ml
+> +++ b/_build/default/lib/.formatted/input.ml
+> @@ -1,4 +1,8 @@
+> -type direction = Up | Left | Down | Right
+> +type direction =
+> +  | Up
+> +  | Left
+> +  | Down
+> +  | Right
+>  
+>  let rec get_dir () =
+>    Out_channel.output_string stdout {|Pick one of "wasd" to move:|};
+> @@ -10,3 +14,4 @@ let rec get_dir () =
+>    | Some 's' -> Down
+>    | Some 'd' -> Right
+>    | _ -> get_dir ()
+> +;;
+[1]
+$ /usr/bin/git --no-pager diff --no-index --color=always -u _build/default/lib/cell.ml _build/default/lib/.formatted/cell.ml
+> diff --git a/_build/default/lib/cell.ml b/_build/default/lib/.formatted/cell.ml
+> index cd019d0..4911609 100644
+> --- a/_build/default/lib/cell.ml
+> +++ b/_build/default/lib/.formatted/cell.ml
+> @@ -1,14 +1,32 @@
+>  open! Base
+>  
+> -type t = Empty | Value of int
+> +type t =
+> +  | Empty
+> +  | Value of int
+>  
+>  let equal x y =
+> -  match (x, y) with
+> +  match x, y with
+>    | Empty, Empty -> true
+>    | Value x, Value y -> x = y
+>    | Empty, Value _ | Value _, Empty -> false
+> +;;
+> +
+> +let string_of cel =
+> +  match cel with
+> +  | Empty -> "_"
+> +  | Value x -> Int.to_string x
+> +;;
+> +
+> +let int_option_of x =
+> +  match x with
+> +  | Empty -> None
+> +  | Value x -> Some x
+> +;;
+> +
+> +let of_int_option x =
+> +  match x with
+> +  | None -> Empty
+> +  | Some x -> Value x
+> +;;
+>  
+> -let string_of cel = match cel with Empty -> "_" | Value x -> Int.to_string x
+> -let int_option_of x = match x with Empty -> None | Value x -> Some x
+> -let of_int_option x = match x with None -> Empty | Some x -> Value x
+>  let get_random () = if Random.int 9 = 0 then Value 4 else Value 2
+[1]
+$ /usr/bin/git --no-pager diff --no-index --color=always -u _build/default/lib/cell.mli _build/default/lib/.formatted/cell.mli
+> diff --git a/_build/default/lib/cell.mli b/_build/default/lib/.formatted/cell.mli
+> index 5a7de14..f789962 100644
+> --- a/_build/default/lib/cell.mli
+> +++ b/_build/default/lib/.formatted/cell.mli
+> @@ -1,16 +1,18 @@
+> -type t = Empty | Value of int
+> +type t =
+> +  | Empty
+> +  | Value of int
+>  
+> -val equal : t -> t -> bool
+>  (** [equal x y] test if [x] and [y] are equal*)
+> +val equal : t -> t -> bool
+>  
+> -val string_of : t -> string
+>  (** [string of x] returns a text representation of [x] *)
+> +val string_of : t -> string
+>  
+> -val int_option_of : t -> int option
+>  (** [int_option_of x] converts a [cell] into an [int option] *)
+> +val int_option_of : t -> int option
+>  
+> -val of_int_option : int option -> t
+>  (** [int_option_of x] converts an [int option] into a [cell] *)
+> +val of_int_option : int option -> t
+>  
+> -val get_random : unit -> t
+>  (** [get_random ()] returns a cell according to the rules of 2048 *)
+> +val get_random : unit -> t
+[1]
+$ (cd _build/default && /home/wayne/.opam/default/bin/ocamlformat --impl lib/board.ml) > _build/default/lib/.formatted/board.ml
+$ /usr/bin/git --no-pager diff --no-index --color=always -u _build/default/lib/board.ml _build/default/lib/.formatted/board.ml
+> diff --git a/_build/default/lib/board.ml b/_build/default/lib/.formatted/board.ml
+> index 1aa153e..06484c1 100644
+> --- a/_build/default/lib/board.ml
+> +++ b/_build/default/lib/.formatted/board.ml
+> @@ -1,68 +1,80 @@
+>  open! Base
+>  open! Stdio
+>  
+> -type t = { size : int; data : Cell.t list list }
+> +type t =
+> +  { size : int
+> +  ; data : Cell.t list list
+> +  }
+>  
+>  let equal x y =
+> -  if x.size = y.size then
+> -    List.for_all2_exn ~f:(List.equal Cell.equal) x.data y.data
+> +  if x.size = y.size
+> +  then List.for_all2_exn ~f:(List.equal Cell.equal) x.data y.data
+>    else false
+> +;;
+>  
+>  let string_of_row row =
+> -  List.map ~f:(fun x -> Cell.string_of x |> String.pad_left ~len:5) row
+> -  |> String.concat
+> +  List.map ~f:(fun x -> Cell.string_of x |> String.pad_left ~len:5) row |> String.concat
+> +;;
+>  
+>  let string_of { data; _ } =
+> -  List.map ~f:(fun x -> String.append (string_of_row x) "\n") data
+> -  |> String.concat
+> +  List.map ~f:(fun x -> String.append (string_of_row x) "\n") data |> String.concat
+> +;;
+>  
+>  let init size =
+> -  {
+> -    size;
+> -    data = List.init size ~f:(fun _ -> List.init size ~f:(fun _ -> Cell.Empty));
+> -  }
+> +  { size; data = List.init size ~f:(fun _ -> List.init size ~f:(fun _ -> Cell.Empty)) }
+> +;;
+>  
+>  let rotate_board { size; data } =
+>    let split_first_column grid =
+> -    List.map ~f:(fun l -> (List.hd_exn l, List.tl_exn l)) grid |> List.unzip
+> +    List.map ~f:(fun l -> List.hd_exn l, List.tl_exn l) grid |> List.unzip
+>    in
+>    let rec aux acc grid =
+>      match grid with
+>      | [] -> assert false
+> -    | hd :: _ -> (
+> -        match hd with
+> -        | [] -> acc
+> -        | _ ->
+> -            let first_col, rest = split_first_column grid in
+> -            aux (first_col :: acc) rest)
+> +    | hd :: _ ->
+> +      (match hd with
+> +       | [] -> acc
+> +       | _ ->
+> +         let first_col, rest = split_first_column grid in
+> +         aux (first_col :: acc) rest)
+>    in
+>    { size; data = aux [] data }
+> +;;
+>  
+>  let compress_row size lst =
+>    let rec aux acc (buf : Cell.t) (lst : Cell.t list) =
+>      match lst with
+> -    | [] -> ( match buf with Cell.Empty -> acc | _ -> buf :: acc)
+> -    | hd :: tl -> (
+> -        match hd with
+> -        | Empty -> aux acc buf tl
+> -        | Value x -> (
+> -            match buf with
+> -            | Empty -> aux acc hd tl
+> -            | Value y ->
+> -                if x = y then aux (Value (x * 2) :: acc) Empty tl
+> -                else aux (buf :: acc) hd tl))
+> +    | [] ->
+> +      (match buf with
+> +       | Cell.Empty -> acc
+> +       | _ -> buf :: acc)
+> +    | hd :: tl ->
+> +      (match hd with
+> +       | Empty -> aux acc buf tl
+> +       | Value x ->
+> +         (match buf with
+> +          | Empty -> aux acc hd tl
+> +          | Value y ->
+> +            if x = y then aux (Value (x * 2) :: acc) Empty tl else aux (buf :: acc) hd tl))
+>    in
+>    let rec pad size lst : Cell.t list =
+> -    if size = 0 then []
+> -    else
+> +    if size = 0
+> +    then []
+> +    else (
+>        match lst with
+>        | [] -> Empty :: pad (size - 1) []
+> -      | hd :: tl -> hd :: pad (size - 1) tl
+> +      | hd :: tl -> hd :: pad (size - 1) tl)
+>    in
+>    aux [] Empty lst |> List.rev |> pad size
+> +;;
+>  
+>  let get_rotate_count (dir : Input.direction) =
+> -  match dir with Left -> 0 | Up -> 1 | Right -> 2 | Down -> 3
+> +  match dir with
+> +  | Left -> 0
+> +  | Up -> 1
+> +  | Right -> 2
+> +  | Down -> 3
+> +;;
+>  
+>  let move dir board =
+>    let rec rotate num board =
+> @@ -73,11 +85,11 @@ let move dir board =
+>    in
+>    let count = get_rotate_count dir in
+>    rotate count board |> compress_board |> rotate (4 - count)
+> +;;
+>  
+>  let has_won board =
+> -  List.exists
+> -    ~f:(fun x -> List.exists ~f:(Cell.equal (Cell.Value 2048)) x)
+> -    board.data
+> +  List.exists ~f:(fun x -> List.exists ~f:(Cell.equal (Cell.Value 2048)) x) board.data
+> +;;
+>  
+>  let has_lost board =
+>    let is_row_stuck row =
+> @@ -85,61 +97,66 @@ let has_lost board =
+>        match row with
+>        | [] -> true
+>        | hd :: tl ->
+> -          if Cell.equal hd last || Cell.equal hd Cell.Empty then false
+> -          else aux hd tl
+> +        if Cell.equal hd last || Cell.equal hd Cell.Empty then false else aux hd tl
+>      in
+>      aux Cell.Empty row
+>    in
+>    let rotated_board = rotate_board board in
+>    List.for_all ~f:is_row_stuck board.data
+>    && List.for_all ~f:is_row_stuck rotated_board.data
+> +;;
+>  
+>  let has_free_space board =
+>    List.exists ~f:(List.exists ~f:(Cell.equal Cell.Empty)) board.data
+> +;;
+>  
+>  let get_free_spaces board =
+>    let get_free_space_row =
+>      List.filter_mapi ~f:(fun id cel ->
+> -        if Cell.equal cel Cell.Empty then Some id else None)
+> +      if Cell.equal cel Cell.Empty then Some id else None)
+>    in
+>    List.concat_mapi
+> -    ~f:(fun id row -> get_free_space_row row |> List.map ~f:(fun x -> (id, x)))
+> +    ~f:(fun id row -> get_free_space_row row |> List.map ~f:(fun x -> id, x))
+>      board.data
+> +;;
+>  
+>  let get_random_free_space board =
+>    let free_spaces = get_free_spaces board in
+>    let random_index = Random.int_incl 0 @@ (List.length free_spaces - 1) in
+>    List.nth_exn free_spaces random_index
+> +;;
+>  
+>  let set_space cell (x, y) board =
+> -  {
+> -    board with
+> +  { board with
+>      data =
+>        (let set_pos cell row =
+> -         List.mapi
+> -           ~f:(fun idx original -> if idx = y then cell else original)
+> -           row
+> +         List.mapi ~f:(fun idx original -> if idx = y then cell else original) row
+>         in
+>         List.mapi
+> -         ~f:(fun idx original ->
+> -           if idx = x then set_pos cell original else original)
+> -         board.data);
+> +         ~f:(fun idx original -> if idx = x then set_pos cell original else original)
+> +         board.data)
+>    }
+> +;;
+>  
+>  let generate_new_tile board =
+> -  if has_free_space board then
+> -    set_space (Cell.get_random ()) (get_random_free_space board) board
+> +  if has_free_space board
+> +  then set_space (Cell.get_random ()) (get_random_free_space board) board
+>    else board
+> +;;
+>  
+>  let main () =
+>    let rec game_loop board =
+>      string_of board |> print_endline;
+> -    if has_won board then print_endline "You Have Won!"
+> -    else if has_lost board then print_endline "Try again..."
+> -    else
+> +    if has_won board
+> +    then print_endline "You Have Won!"
+> +    else if has_lost board
+> +    then print_endline "Try again..."
+> +    else (
+>        let dir = Input.get_dir () in
+>        let next_board = move dir board in
+> -      if equal board next_board then game_loop board
+> -      else generate_new_tile next_board |> game_loop
+> +      if equal board next_board
+> +      then game_loop board
+> +      else generate_new_tile next_board |> game_loop)
+>    in
+>    init 4 |> generate_new_tile |> generate_new_tile |> game_loop
+> +;;
+[1]
