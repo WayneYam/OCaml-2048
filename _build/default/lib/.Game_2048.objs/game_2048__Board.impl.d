@@ -1,1 +1,1 @@
-lib/board.ml: Base Int List Random Stdio String
+lib/board.ml: Base Cell Input List Random Stdio String

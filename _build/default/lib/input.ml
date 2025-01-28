@@ -1,4 +1,4 @@
-open Board
+type direction = Up | Left | Down | Right
 
 let rec get_dir () =
   Out_channel.output_string stdout {|Pick one of "wasd" to move:|};

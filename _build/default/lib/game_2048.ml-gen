@@ -3,5 +3,8 @@
 (** @canonical Game_2048.Board *)
 module Board = Game_2048__Board
 
+(** @canonical Game_2048.Cell *)
+module Cell = Game_2048__Cell
+
 (** @canonical Game_2048.Input *)
 module Input = Game_2048__Input

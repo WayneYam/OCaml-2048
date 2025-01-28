@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/Game_2048/META"
+  "_build/install/default/lib/Game_2048/dune-package"
+  "_build/install/default/lib/Game_2048/opam"
+]
+bin: [
+  "_build/install/default/bin/Game_2048"
+]

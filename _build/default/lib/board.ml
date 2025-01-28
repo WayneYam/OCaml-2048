@@ -1,35 +1,25 @@
 open! Base
 open! Stdio
 
-type cell = Empty | Value of int
-type board = { size : int; data : cell list list }
+type t = { size : int; data : Cell.t list list }
 
-let cell_equal x y =
-  match (x, y) with
-  | Empty, Empty -> true
-  | Value x, Value y -> x = y
-  | _ -> false
-
-let board_equal x y =
+let equal x y =
   if x.size = y.size then
-    List.for_all2_exn ~f:(List.equal cell_equal) x.data y.data
+    List.for_all2_exn ~f:(List.equal Cell.equal) x.data y.data
   else false
 
-let cell_to_string cel =
-  match cel with Empty -> "_" | Value x -> Int.to_string x
-
-let row_to_string row =
-  List.map ~f:(fun x -> cell_to_string x |> String.pad_left ~len:5) row
+let string_of_row row =
+  List.map ~f:(fun x -> Cell.string_of x |> String.pad_left ~len:5) row
   |> String.concat
 
-let board_to_string { data; _ } =
-  List.map ~f:(fun x -> String.append (row_to_string x) "\n") data
+let string_of { data; _ } =
+  List.map ~f:(fun x -> String.append (string_of_row x) "\n") data
   |> String.concat
 
-let initialize_board size =
+let init size =
   {
     size;
-    data = List.init size ~f:(fun _ -> List.init size ~f:(fun _ -> Empty));
+    data = List.init size ~f:(fun _ -> List.init size ~f:(fun _ -> Cell.Empty));
   }
 
 let rotate_board { size; data } =
@@ -51,30 +41,32 @@ let rotate_board { size; data } =
 let compress_row size lst =
   let rec aux acc buf lst =
     match lst with
-    | [] -> ( match buf with Empty -> acc | _ -> buf :: acc)
+    | [] -> ( match buf with Cell.Empty -> acc | _ -> buf :: acc)
     | hd :: tl -> (
         match hd with
-        | Empty -> aux acc buf tl
-        | Value x -> (
+        | Cell.Empty -> aux acc buf tl
+        | Cell.Value x -> (
             match buf with
-            | Empty -> aux acc hd tl
-            | Value y ->
-                if x = y then aux (Value (x * 2) :: acc) Empty tl
+            | Cell.Empty -> aux acc hd tl
+            | Cell.Value y ->
+                if x = y then aux (Cell.Value (x * 2) :: acc) Cell.Empty tl
                 else aux (buf :: acc) hd tl))
   in
   let rec pad size lst =
     if size = 0 then []
     else
       match lst with
-      | [] -> Empty :: pad (size - 1) []
+      | [] -> Cell.Empty :: pad (size - 1) []
       | hd :: tl -> hd :: pad (size - 1) tl
   in
-  aux [] Empty lst |> List.rev |> pad size
+  aux [] Cell.Empty lst |> List.rev |> pad size
 
-type direction = Up | Left | Down | Right
-
-let get_rotate_number dir =
-  match dir with Left -> 0 | Up -> 1 | Right -> 2 | Down -> 3
+let get_rotate_count dir =
+  match dir with
+  | Input.Left -> 0
+  | Input.Up -> 1
+  | Input.Right -> 2
+  | Input.Down -> 3
 
 let move dir board =
   let rec rotate num board =
@@ -83,46 +75,45 @@ let move dir board =
   let compress_board { size; data } =
     { size; data = List.map ~f:(compress_row size) data }
   in
-  let count = get_rotate_number dir in
+  let count = get_rotate_count dir in
   rotate count board |> compress_board |> rotate (4 - count)
 
-let check_has_won board =
+let has_won board =
   List.exists
-    ~f:(fun x -> List.exists ~f:(cell_equal (Value 2048)) x)
+    ~f:(fun x -> List.exists ~f:(Cell.equal (Cell.Value 2048)) x)
     board.data
 
-let check_has_lost board =
+let has_lost board =
   let is_row_stuck row =
     let rec aux last row =
       match row with
       | [] -> true
       | hd :: tl ->
-          if cell_equal hd last || cell_equal hd Empty then false else aux hd tl
+          if Cell.equal hd last || Cell.equal hd Cell.Empty then false
+          else aux hd tl
     in
-    aux Empty row
+    aux Cell.Empty row
   in
   let rotated_board = rotate_board board in
   List.for_all ~f:is_row_stuck board.data
   && List.for_all ~f:is_row_stuck rotated_board.data
 
-let check_has_free_space board =
-  List.exists ~f:(List.exists ~f:(cell_equal Empty)) board.data
+let has_free_space board =
+  List.exists ~f:(List.exists ~f:(Cell.equal Cell.Empty)) board.data
 
-let get_all_free_space board =
+let get_free_spaces board =
   let get_free_space_row =
     List.filter_mapi ~f:(fun id cel ->
-        if cell_equal cel Empty then Some id else None)
+        if Cell.equal cel Cell.Empty then Some id else None)
   in
   List.concat_mapi
     ~f:(fun id row -> get_free_space_row row |> List.map ~f:(fun x -> (id, x)))
     board.data
 
 let get_random_free_space board =
-  let free_spaces = get_all_free_space board in
+  let free_spaces = get_free_spaces board in
   let random_index = Random.int_incl 0 @@ (List.length free_spaces - 1) in
   List.nth_exn free_spaces random_index
-
-let get_random_cell () = if Random.int 9 = 0 then Value 4 else Value 2
 
 let set_space cell (x, y) board =
   {
@@ -140,6 +131,19 @@ let set_space cell (x, y) board =
   }
 
 let generate_new_tile board =
-  if check_has_free_space board then
-    set_space (get_random_cell ()) (get_random_free_space board) board
+  if has_free_space board then
+    set_space (Cell.get_random ()) (get_random_free_space board) board
   else board
+
+let main () =
+  let rec game_loop board =
+    string_of board |> print_endline;
+    if has_won board then print_endline "You Have Won!"
+    else if has_lost board then print_endline "Try again..."
+    else
+      let dir = Input.get_dir () in
+      let next_board = move dir board in
+      if equal board next_board then game_loop board
+      else generate_new_tile next_board |> game_loop
+  in
+  init 4 |> generate_new_tile |> generate_new_tile |> game_loop

@@ -1,1 +1,1 @@
-lib/input.ml: Board In_channel Out_channel
+lib/input.ml: In_channel Out_channel
