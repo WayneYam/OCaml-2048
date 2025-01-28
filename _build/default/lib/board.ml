@@ -39,34 +39,30 @@ let rotate_board { size; data } =
   { size; data = aux [] data }
 
 let compress_row size lst =
-  let rec aux acc buf lst =
+  let rec aux acc (buf : Cell.t) (lst : Cell.t list) =
     match lst with
     | [] -> ( match buf with Cell.Empty -> acc | _ -> buf :: acc)
     | hd :: tl -> (
         match hd with
-        | Cell.Empty -> aux acc buf tl
-        | Cell.Value x -> (
+        | Empty -> aux acc buf tl
+        | Value x -> (
             match buf with
-            | Cell.Empty -> aux acc hd tl
-            | Cell.Value y ->
-                if x = y then aux (Cell.Value (x * 2) :: acc) Cell.Empty tl
+            | Empty -> aux acc hd tl
+            | Value y ->
+                if x = y then aux (Value (x * 2) :: acc) Empty tl
                 else aux (buf :: acc) hd tl))
   in
-  let rec pad size lst =
+  let rec pad size lst : Cell.t list =
     if size = 0 then []
     else
       match lst with
-      | [] -> Cell.Empty :: pad (size - 1) []
+      | [] -> Empty :: pad (size - 1) []
       | hd :: tl -> hd :: pad (size - 1) tl
   in
-  aux [] Cell.Empty lst |> List.rev |> pad size
+  aux [] Empty lst |> List.rev |> pad size
 
-let get_rotate_count dir =
-  match dir with
-  | Input.Left -> 0
-  | Input.Up -> 1
-  | Input.Right -> 2
-  | Input.Down -> 3
+let get_rotate_count (dir : Input.direction) =
+  match dir with Left -> 0 | Up -> 1 | Right -> 2 | Down -> 3
 
 let move dir board =
   let rec rotate num board =
