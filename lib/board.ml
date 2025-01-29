@@ -5,15 +5,12 @@ type t =
   { size : int
   ; data : Cell.t list list
   }
+[@@deriving eq]
 
-let equal x y =
-  if x.size = y.size
-  then List.for_all2_exn ~f:(List.equal Cell.equal) x.data y.data
-  else false
-;;
+let empty_cell = Cell.empty
 
 let string_of_row row =
-  List.map ~f:(fun x -> Cell.string_of x |> String.pad_left ~len:5) row |> String.concat
+  List.map ~f:(fun x -> Cell.string_of x |> Printf.sprintf "%5s") row |> String.concat
 ;;
 
 let string_of { data; _ } =
@@ -21,7 +18,7 @@ let string_of { data; _ } =
 ;;
 
 let init size =
-  { size; data = List.init size ~f:(fun _ -> List.init size ~f:(fun _ -> Cell.Empty)) }
+  { size; data = List.init size ~f:(fun _ -> List.init size ~f:(fun _ -> empty_cell)) }
 ;;
 
 let rotate_board { size; data } =
@@ -42,30 +39,32 @@ let rotate_board { size; data } =
 ;;
 
 let compress_row size lst =
-  let rec aux acc (buf : Cell.t) (lst : Cell.t list) =
+  let rec aux acc buf lst =
     match lst with
     | [] ->
-      (match buf with
-       | Cell.Empty -> acc
-       | _ -> buf :: acc)
+      (match Cell.int_option_of buf with
+       | None -> acc
+       | Some _ -> buf :: acc)
     | hd :: tl ->
-      (match hd with
-       | Empty -> aux acc buf tl
-       | Value x ->
-         (match buf with
-          | Empty -> aux acc hd tl
-          | Value y ->
-            if x = y then aux (Value (x * 2) :: acc) Empty tl else aux (buf :: acc) hd tl))
+      (match Cell.int_option_of hd with
+       | None -> aux acc buf tl
+       | Some x ->
+         (match Cell.int_option_of buf with
+          | None -> aux acc hd tl
+          | Some y ->
+            if x = y
+            then aux (Cell.of_int (x * 2) :: acc) empty_cell tl
+            else aux (buf :: acc) hd tl))
   in
   let rec pad size lst : Cell.t list =
     if size = 0
     then []
     else (
       match lst with
-      | [] -> Empty :: pad (size - 1) []
+      | [] -> empty_cell :: pad (size - 1) []
       | hd :: tl -> hd :: pad (size - 1) tl)
   in
-  aux [] Empty lst |> List.rev |> pad size
+  aux [] empty_cell lst |> List.rev |> pad size
 ;;
 
 let get_rotate_count (dir : Input.direction) =
@@ -88,7 +87,7 @@ let move dir board =
 ;;
 
 let has_won board =
-  List.exists ~f:(fun x -> List.exists ~f:(Cell.equal (Cell.Value 2048)) x) board.data
+  List.exists ~f:(fun x -> List.exists ~f:(Cell.equal (Cell.of_int 2048)) x) board.data
 ;;
 
 let has_lost board =
@@ -97,9 +96,9 @@ let has_lost board =
       match row with
       | [] -> true
       | hd :: tl ->
-        if Cell.equal hd last || Cell.equal hd Cell.Empty then false else aux hd tl
+        if Cell.equal hd last || Cell.equal hd empty_cell then false else aux hd tl
     in
-    aux Cell.Empty row
+    aux empty_cell row
   in
   let rotated_board = rotate_board board in
   List.for_all ~f:is_row_stuck board.data
@@ -107,13 +106,13 @@ let has_lost board =
 ;;
 
 let has_free_space board =
-  List.exists ~f:(List.exists ~f:(Cell.equal Cell.Empty)) board.data
+  List.exists ~f:(List.exists ~f:(Cell.equal empty_cell)) board.data
 ;;
 
 let get_free_spaces board =
   let get_free_space_row =
     List.filter_mapi ~f:(fun id cel ->
-      if Cell.equal cel Cell.Empty then Some id else None)
+      if Cell.equal cel empty_cell then Some id else None)
   in
   List.concat_mapi
     ~f:(fun id row -> get_free_space_row row |> List.map ~f:(fun x -> id, x))

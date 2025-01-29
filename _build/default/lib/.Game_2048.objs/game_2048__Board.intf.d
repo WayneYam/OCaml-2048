@@ -1,1 +1,1 @@
-lib/board.mli:
+lib/board.pp.mli:

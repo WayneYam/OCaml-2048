@@ -1,3 +1,4 @@
 (library
  (libraries base stdio)
+ (preprocess (pps ppx_deriving.eq))
  (name Game_2048))

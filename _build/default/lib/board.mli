@@ -1,13 +1,13 @@
 type t
 
-val equal : t -> t -> bool
 (** [equal x y] test if [x] and [y] are equal*)
+val equal : t -> t -> bool
 
-val string_of : t -> string
 (** [string of x] returns a text representation of [x] *)
+val string_of : t -> string
 
-val init : int -> t
 (** [init x] initializes a board of size [x] *)
+val init : int -> t
 
-val main : unit -> unit
 (** [main ()] runs the game *)
+val main : unit -> unit

@@ -1,1 +1,1 @@
-lib/input.mli:
+lib/input.pp.mli:
