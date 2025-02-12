@@ -5,7 +5,7 @@ type t =
   { size : int
   ; data : Cell.t list list
   }
-[@@deriving eq]
+[@@deriving equal]
 
 let empty_cell = Cell.empty
 

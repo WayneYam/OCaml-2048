@@ -1,6 +1,6 @@
 open! Base
 
-type t = int option [@@deriving eq]
+type t = int option [@@deriving equal]
 
 let string_of = function
   | None -> "_"
